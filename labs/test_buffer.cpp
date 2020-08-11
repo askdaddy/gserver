@@ -6,7 +6,6 @@
 #include <boost/bind/bind.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/basic_streambuf.hpp>
-
 #include "test_buffer.h"
 
 using namespace boost::asio;

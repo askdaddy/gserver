@@ -47,5 +47,4 @@ private:
 
 };
 
-
 #endif //GSERVER_TEST_BUFFER_H
