@@ -13,28 +13,32 @@
 #endif
 
 
-
 #ifdef OS_PLATFORM_WINDOWS
 
 
 #else
+// *nux OS
 
 #define FALSE               0
 #define TRUE                1
 
-typedef int16_t				INT16;
-typedef uint16_t    		UINT16;
-typedef int32_t				INT32;
-typedef uint32_t    		UINT32;
-typedef bool				BOOL;
+typedef char				INT8;
+typedef unsigned char		UINT8;
+typedef short				INT16;
+typedef unsigned short		UINT16;
+typedef int					INT32;
+typedef unsigned int		UINT32;
+typedef int					BOOL;
+typedef void				VOID;
 typedef float				FLOAT;
 typedef double				DOUBLE;
-typedef int64_t 			INT64;
-typedef uint64_t        	UINT64;
-typedef void                VOID;
-typedef char                CHAR;
+typedef long long			INT64;
+typedef unsigned long long	UINT64;
+typedef char				BYTE;
+typedef char				CHAR;
+typedef int					SOCKET;
 
-typedef int32_t        		SOCKET;
+typedef int SOCKET;
 
 
 #endif

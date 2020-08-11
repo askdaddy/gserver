@@ -9,15 +9,19 @@
 #include <mutex>
 #include "net.h"
 #include "packet.h"
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/noncopyable.hpp>
 
+#define RECV_BUF_SIZE               8192
 using namespace boost::asio;
 
 namespace net {
 
-#define RECV_BUF_SIZE               8192
-    typedef std::deque<mutable_buffer> BufferQueue;
+    class Connection;
+    using Connection_ptr = boost::shared_ptr<Connection>;
 
-    class Connection {
+    class Connection : public boost::enable_shared_from_this<Connection>, private boost::noncopyable {
     public:
         explicit Connection(io_context &io);
 
@@ -38,14 +42,16 @@ namespace net {
 
         VOID DoReceive();
 
-        Connection *GetNext();
+        Connection_ptr &GetNext();
 
-        VOID SetNext(Connection *c);
+        VOID SetNext(Connection_ptr &c);
 
         VOID Reset();
 
     private:
         VOID OnData(const boost::system::error_code &e, std::size_t data_len);
+
+        BOOL HandleRecv(UINT32 len);
 
     private:
         UINT32 id_;
@@ -59,12 +65,16 @@ namespace net {
 
         IPacketHandler *handler_;
 
-        BufferQueue send_list_;
+//        BufferQueue send_list_;
 
     private:
+
         Connection *next_;
     };
 
+
+
+//* ------------------------------------------------------ *\\
 
     class ConnectionMgr {
         ConnectionMgr();
@@ -79,20 +89,22 @@ namespace net {
 
         BOOL InitConnections(io_context &io);
 
-        Connection *AlloConnection();
+        Connection_ptr &AlloConnection();
 
         VOID DestroyConnections();
 
-        Connection *GetConnection(UINT32 id);
+        Connection_ptr &GetConnection(UINT32 id);
 
         BOOL DelConnection(UINT32 id);
 
-        BOOL DelConnection(Connection *conn);
+        BOOL DelConnection(Connection_ptr conn);
+
 
     private:
-        std::vector<Connection *> conn_list_;
-        Connection *free_conn_head_;
-        Connection *free_conn_tail_;
+
+        std::vector<Connection_ptr> conn_list_;
+        Connection_ptr free_conn_head_;
+        Connection_ptr free_conn_tail_;
         std::mutex conn_list_mutex_;
     };
 }

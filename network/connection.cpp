@@ -75,14 +75,26 @@ VOID Connection::DoReceive() {
 }
 
 VOID Connection::OnData(const boost::system::error_code &e, std::size_t data_len) {
-    //TODO
-    if (!e)
+    if (!e) {
         std::cout << recv_buff_ << std::endl;
+        HandleRecv((UINT32)data_len);
+
+        return;
+    }
+
+    Close();
 }
 
 VOID Connection::Reset() {
     connected_ = FALSE;
     buff_pos_ = recv_buff_;
+}
+
+BOOL Connection::HandleRecv(UINT32 len) {
+    data_len_+= len;
+
+
+    return FALSE;
 }
 
 // ----------------------------------------------------------------------- \\
@@ -120,36 +132,38 @@ BOOL ConnectionMgr::InitConnections(io_context &io) {
     return TRUE;
 }
 
-Connection *ConnectionMgr::AlloConnection() {
-    Connection *conn = nullptr;
+Connection_ptr &ConnectionMgr::AlloConnection() {
+    Connection_ptr conn(nullptr), empty(nullptr);
     conn_list_mutex_.lock();
 
-    if (free_conn_head_ == nullptr) {
+    if (!free_conn_head_) {
         conn_list_mutex_.unlock();
-        return nullptr;
+        return empty;
     }
 
     if (free_conn_head_ == free_conn_tail_) {
         conn = free_conn_head_;
-        free_conn_tail_ = free_conn_head_ = nullptr;
+        free_conn_tail_ = free_conn_head_ = empty;
     } else {
         conn = free_conn_head_;
         free_conn_head_ = conn->GetNext();
-        conn->SetNext(nullptr);
+        conn->SetNext(empty);
     }
     conn_list_mutex_.unlock();
 
     return conn;
 }
 
-Connection *ConnectionMgr::GetConnection(UINT32 id) {
+Connection_ptr &ConnectionMgr::GetConnection(UINT32 id) {
     ERROR_RETURN_NULLPTR(id != 0);
 
     UINT32 mod = id % conn_list_.size();
 
-    Connection *conn = conn_list_.at(mod == 0 ? (conn_list_.size() - 1) : (mod - 1));
+    Connection_ptr &conn = conn_list_.at(mod == 0 ? (conn_list_.size() - 1) : (mod - 1));
 
-    ERROR_RETURN_NULLPTR(conn->GetId() == id);
+    if(conn->GetId() != id){
+        return ;
+    }
 
     return conn;
 }

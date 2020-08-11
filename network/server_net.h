@@ -29,7 +29,7 @@ namespace net {
 
         VOID Shutdown();
 
-        VOID HandleAccept(Connection *conn, const boost::system::error_code &e);
+        VOID HandleAccept(Connection_ptr &conn, const boost::system::error_code &e);
 
         BOOL WaitForConnect();
 

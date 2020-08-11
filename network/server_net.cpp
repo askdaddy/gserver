@@ -29,7 +29,7 @@ VOID ServerNet::Start(std::string ipv4, UINT16 port) {
 }
 
 BOOL ServerNet::WaitForConnect() {
-    Connection *conn = ConnectionMgr::GetInstancePtr()->AlloConnection();
+    Connection_ptr conn = ConnectionMgr::GetInstancePtr()->AlloConnection();
     ERROR_RETURN_FALSE(conn != nullptr);
 
     acceptor_->async_accept(conn->GetSocket(),
@@ -38,7 +38,7 @@ BOOL ServerNet::WaitForConnect() {
     return TRUE;
 }
 
-VOID ServerNet::HandleAccept(Connection *conn, const boost::system::error_code &e) {
+VOID ServerNet::HandleAccept(Connection_ptr &conn, const boost::system::error_code &e) {
     if (e) {
         conn->Close();
         return;
