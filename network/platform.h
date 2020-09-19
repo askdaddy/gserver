@@ -21,6 +21,7 @@
 
 #define FALSE               0
 #define TRUE                1
+#define NULL_PTR            nullptr
 
 typedef char				INT8;
 typedef unsigned char		UINT8;
@@ -37,8 +38,6 @@ typedef unsigned long long	UINT64;
 typedef char				BYTE;
 typedef char				CHAR;
 typedef int					SOCKET;
-
-typedef int SOCKET;
 
 
 #endif

@@ -13,12 +13,13 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/noncopyable.hpp>
 
-#define RECV_BUF_SIZE               8192
+#define RECV_BUF_SIZE               512
 using namespace boost::asio;
 
 namespace net {
 
     class Connection;
+
     using Connection_ptr = boost::shared_ptr<Connection>;
 
     class Connection : public boost::enable_shared_from_this<Connection>, private boost::noncopyable {
@@ -36,15 +37,15 @@ namespace net {
 
         UINT32 GetId() const;
 
-        VOID SetHandler(IPacketHandler *hdl);
+        VOID SetHandler(PacketHandler_ptr hdl);
 
         ip::tcp::socket &GetSocket();
 
         VOID DoReceive();
 
-        Connection_ptr &GetNext();
+        Connection_ptr GetNext();
 
-        VOID SetNext(Connection_ptr &c);
+        VOID SetNext(Connection_ptr c);
 
         VOID Reset();
 
@@ -52,6 +53,7 @@ namespace net {
         VOID OnData(const boost::system::error_code &e, std::size_t data_len);
 
         BOOL HandleRecv(UINT32 len);
+        BOOL CheckHeader(CHAR* packet_buff);
 
     private:
         UINT32 id_;
@@ -63,15 +65,13 @@ namespace net {
         CHAR recv_buff_[RECV_BUF_SIZE];
         CHAR *buff_pos_;
 
-        IPacketHandler *handler_;
+        PacketHandler_ptr handler_;
 
 //        BufferQueue send_list_;
 
-    private:
 
-        Connection *next_;
+        Connection_ptr next_;
     };
-
 
 
 //* ------------------------------------------------------ *\\
@@ -89,15 +89,17 @@ namespace net {
 
         BOOL InitConnections(io_context &io);
 
-        Connection_ptr &AlloConnection();
+        Connection_ptr AlloConnection();
 
         VOID DestroyConnections();
 
-        Connection_ptr &GetConnection(UINT32 id);
+        Connection_ptr GetConnection(UINT32 id);
 
         BOOL DelConnection(UINT32 id);
 
         BOOL DelConnection(Connection_ptr conn);
+
+
 
 
     private:
