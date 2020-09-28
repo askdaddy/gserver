@@ -9,13 +9,11 @@
 #include <boost/asio.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/bind/bind.hpp>
-#include "platform.h"
+#include "../platform.h"
 
 using namespace boost::asio;
 
 namespace net {
-    typedef ip::tcp::endpoint Peer;
-
     static const UINT32 MAX_CONNS = 1024;
 
 #define ERROR_RETURN(P) if((P) == FALSE){ return; }

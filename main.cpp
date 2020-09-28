@@ -1,13 +1,15 @@
 #include <iostream>
 
-//#include "server_net.h"
+//#include <server_net.h>
+#include <test_buffer.h>
+
 //using namespace net;
-#include "test_buffer.h"
-
 int main() {
-//    ServerNet::GetInstancePtr()->Start("0",24000);
+//    ServerNet server;
 
-    TestBuffer tb("0.0.0.0", 24000);
+//    server.Start("0",12400);
+    TestBuffer t("0.0.0.0",12400);
+
 
     std::cout << "In the end." << std::endl;
     return 0;

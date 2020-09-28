@@ -35,16 +35,15 @@ public:
 
     void recvHandler(std::size_t tf_bytes, const error_code &ec);
 
-
 private:
     shared_ptr<io_context> io_;
     tcp::endpoint host_;
     tcp::acceptor acceptor_;
     tcp::socket socket_;
 
-    char recv_buff_[256];
-    char* recv_pos;
-
+//    char recv_buff_[256];
+//    char* recv_pos;
+    streambuf recv_buff_;
 };
 
 #endif //GSERVER_TEST_BUFFER_H

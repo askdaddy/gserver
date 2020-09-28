@@ -9,11 +9,10 @@
 
 #include "connection.h"
 
-//#include <boost/thread.hpp>
-
 namespace net {
 
     class ServerNet {
+    public:
         ServerNet(void);
 
         virtual ~ServerNet(void);

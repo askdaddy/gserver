@@ -12,14 +12,12 @@ Connection::Connection(io_context &io)
     handler_ = NULL_PTR;
     connected_ = FALSE;
 
-    data_len_ = 0;
-    buff_pos_ = recv_buff_;
-
     id_ = 0;
+    ResetBuff();
 }
 
 Connection::~Connection() {
-    Reset();
+    ResetBuff();
     handler_ = NULL_PTR;
     id_ = 0;
 }
@@ -68,7 +66,7 @@ VOID Connection::Close() {
 }
 
 VOID Connection::DoReceive() {
-    socket_.async_read_some(buffer(recv_buff_ + data_len_, RECV_BUF_SIZE - data_len_),
+    socket_.async_read_some(buffer(recv_buff_ + recv_len_, RECV_BUF_SIZE - recv_len_),
                             boost::bind(&Connection::OnData, this, placeholders::error,
                                         placeholders::bytes_transferred));
 
@@ -76,18 +74,11 @@ VOID Connection::DoReceive() {
 
 VOID Connection::OnData(const boost::system::error_code &e, std::size_t data_len) {
     if (!e) {
-        std::cout << recv_buff_ << std::endl;
-        HandleRecv((UINT32) data_len);
-        // TODO Extract buffer
+        // Handle recv
+        recv_len_ += data_len;
 
-        PacketHeader *pHeader = (PacketHeader *) buff_pos_;
-        if (!CheckHeader(buff_pos_)) {
-            // TODO throw Error
-            return;
-        }
-
-
-        // TODO Call PacketHandler
+        ParseBuffer();
+        DoReceive();
 
         return;
     }
@@ -95,17 +86,41 @@ VOID Connection::OnData(const boost::system::error_code &e, std::size_t data_len
     Close();
 }
 
+VOID Connection::ParseBuffer() {
+    UINT32 header_len = sizeof(PacketHeader);
+    if (recv_len_ < header_len) {
+        return;
+    }
+
+    PacketHeader *pHeader = (PacketHeader *) recv_buff_pos_;
+    if (CheckHeader(recv_buff_pos_)) {
+
+        return;
+    }
+
+    ERROR_RETURN(pHeader->len != 0);
+
+    UINT32 body_len = pHeader->len;
+
+    if ((header_len + body_len) < recv_len_) {
+
+    }
+
+}
+
 VOID Connection::Reset() {
     connected_ = FALSE;
-    buff_pos_ = recv_buff_;
+    ResetBuff();
 }
 
-BOOL Connection::HandleRecv(UINT32 len) {
-    data_len_ += len;
-
-
-    return FALSE;
+VOID Connection::ResetBuff() {
+    recv_buff_pos_ = recv_buff_;
+    recv_len_ = 0;
+    data_buff_pos_ = data_buff_;
+    data_len_ = 0;
 }
+
+
 BOOL Connection::CheckHeader(CHAR *pBuff) {
     PacketHeader *pHeader = (PacketHeader *) pBuff;
     ERROR_RETURN_FALSE(pHeader->magic == PACKET_MAGIC);

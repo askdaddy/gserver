@@ -20,7 +20,6 @@ namespace net {
     };
 
     class Packet {
-    public:
 
 
     };

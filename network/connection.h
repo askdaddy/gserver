@@ -50,10 +50,11 @@ namespace net {
         VOID Reset();
 
     private:
+        VOID ResetBuff();
         VOID OnData(const boost::system::error_code &e, std::size_t data_len);
 
-        BOOL HandleRecv(UINT32 len);
         BOOL CheckHeader(CHAR* packet_buff);
+        VOID ParseBuffer();
 
     private:
         UINT32 id_;
@@ -61,9 +62,13 @@ namespace net {
 
         BOOL connected_;
 
-        UINT32 data_len_;
+        UINT32 recv_len_;
         CHAR recv_buff_[RECV_BUF_SIZE];
-        CHAR *buff_pos_;
+        CHAR *recv_buff_pos_;
+
+        UINT32 data_len_;
+        CHAR data_buff_[RECV_BUF_SIZE*2];
+        CHAR *data_buff_pos_;
 
         PacketHandler_ptr handler_;
 

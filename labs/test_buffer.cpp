@@ -15,6 +15,7 @@ using boost::asio::ip::address;
 using boost::asio::buffer;
 using boost::asio::basic_streambuf;
 using boost::asio::buffer;
+using boost::asio::streambuf;
 
 TestBuffer::TestBuffer(std::string ip, unsigned short port) :
         io_{make_shared<io_context>()},
@@ -24,11 +25,11 @@ TestBuffer::TestBuffer(std::string ip, unsigned short port) :
 
     acceptor_.async_accept(socket_,
                            boost::bind(&TestBuffer::acceptHandler, this, placeholders::error));
-
     io_->run();
 }
 
 TestBuffer::~TestBuffer() {
+
 }
 
 
@@ -42,7 +43,8 @@ void TestBuffer::acceptHandler(const error_code &e) {
 }
 
 void TestBuffer::doRecv() {
-    socket_.async_read_some(buffer(recv_buff_,512),
+    streambuf::mutable_buffers_type b_ = recv_buff_.prepare(256);
+    socket_.async_read_some(buffer(b_),
                             boost::bind(&TestBuffer::recvHandler, this,
                                         placeholders::bytes_transferred, placeholders::error));
 }
@@ -50,11 +52,24 @@ void TestBuffer::doRecv() {
 void TestBuffer::recvHandler(std::size_t tf_bytes, const error_code &ec) {
     if (!ec) {
         std::cout << "recv " << tf_bytes << std::endl;
+        recv_buff_.commit(tf_bytes);
 
-        std::cout << recv_buff_ << std::endl;
+        auto bufs = recv_buff_.data();
+
+//        std::istream is(&recv_buff_);
+//        std::string s;
+//        is >> s;
+        char cs[recv_buff_.size()];
+        recv_buff_.sgetn(cs,sizeof cs);
+        recv_buff_.consume(sizeof cs);
+
+
+
+        std::cout << recv_buff_.size() << ": " << cs << std::endl;
 
     } else {
         std::cout << ec.message() << std::endl;
+        return;
     }
 
     doRecv();

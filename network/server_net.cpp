@@ -3,8 +3,10 @@
 //
 
 #include "server_net.h"
+#include <boost/asio.hpp>
 
 using namespace net;
+using namespace boost::asio;
 
 ServerNet::ServerNet(void) {}
 
@@ -17,9 +19,9 @@ VOID ServerNet::Start(std::string ipv4, UINT16 port) {
         ipv4 = "0.0.0.0";
     }
 
-    Peer addr(ip::address_v4::from_string(ipv4), port);
+    ip::tcp::endpoint addr(ip::address_v4::from_string(ipv4), port);
 
-    acceptor_ = new boost::asio::ip::tcp::acceptor(io_, addr, TRUE);
+    acceptor_ = new ip::tcp::acceptor(io_, addr, TRUE);
 
     WaitForConnect();
 
