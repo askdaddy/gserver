@@ -61,26 +61,34 @@ void TestBuffer::recvHandler(std::size_t tf_bytes, const error_code &ec) {
 //        std::string s;
 //        is >> s;
         char cs[6];
-        recv_buff_.sgetn(cs,sizeof cs);
+        char* cs_pos = cs;
+
+        recv_buff_.sgetn(cs, sizeof cs);
         recv_buff_.consume(sizeof cs);
 
         UINT16 mg;
         UINT32 le;
-        sscanf(cs,"%2u%4u",&mg,&le);
+        mg = *(UINT16 *) cs_pos;
+
+        cs_pos += sizeof(UINT16);
+
+        le = *(UINT32 *) cs_pos;
 
 
-        std::cout << mg << le << std::endl;
+        std::cout << le << std::endl;
 
-//        char ms[pHeader->len];
-//        recv_buff_.sgetn(ms,sizeof ms);
-//        recv_buff_.consume(sizeof ms);
+
+
+        char ms[64];
+        recv_buff_.sgetn(ms,le);
+        recv_buff_.consume(le);
 
 
 
 //        std::cout << recv_buff_.size() << ": " << ms << std::endl;
 
         std::ostream os(&tran_buff_);
-        os << "got msg.\n";
+        os << "got msg.: " << ms << std::endl;
 
         socket_.send(tran_buff_.data());
 

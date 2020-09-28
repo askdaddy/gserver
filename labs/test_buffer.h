@@ -23,11 +23,6 @@ using boost::enable_shared_from_this;
 using boost::asio::streambuf;
 
 
-struct PacketHeader {
-    UINT16 magic;
-    UINT32 len;
-};
-
 class TestBuffer : public boost::noncopyable {
 public:
     TestBuffer(std::string ip,
