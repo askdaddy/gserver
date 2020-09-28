@@ -13,6 +13,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/basic_streambuf.hpp>
+#include "../platform.h"
 
 using boost::shared_ptr;
 using boost::asio::io_context;
@@ -20,6 +21,12 @@ using boost::asio::ip::tcp;
 using boost::system::error_code;
 using boost::enable_shared_from_this;
 using boost::asio::streambuf;
+
+
+struct PacketHeader {
+    UINT16 magic;
+    UINT32 len;
+};
 
 class TestBuffer : public boost::noncopyable {
 public:
@@ -44,6 +51,7 @@ private:
 //    char recv_buff_[256];
 //    char* recv_pos;
     streambuf recv_buff_;
+    streambuf tran_buff_;
 };
 
 #endif //GSERVER_TEST_BUFFER_H

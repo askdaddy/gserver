@@ -7,6 +7,7 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/basic_streambuf.hpp>
 #include "test_buffer.h"
+#include <stdio.h>
 
 using namespace boost::asio;
 
@@ -54,18 +55,34 @@ void TestBuffer::recvHandler(std::size_t tf_bytes, const error_code &ec) {
         std::cout << "recv " << tf_bytes << std::endl;
         recv_buff_.commit(tf_bytes);
 
-        auto bufs = recv_buff_.data();
+//        auto bufs = recv_buff_.data();
 
 //        std::istream is(&recv_buff_);
 //        std::string s;
 //        is >> s;
-        char cs[recv_buff_.size()];
+        char cs[6];
         recv_buff_.sgetn(cs,sizeof cs);
         recv_buff_.consume(sizeof cs);
 
+        UINT16 mg;
+        UINT32 le;
+        sscanf(cs,"%2u%4u",&mg,&le);
 
 
-        std::cout << recv_buff_.size() << ": " << cs << std::endl;
+        std::cout << mg << le << std::endl;
+
+//        char ms[pHeader->len];
+//        recv_buff_.sgetn(ms,sizeof ms);
+//        recv_buff_.consume(sizeof ms);
+
+
+
+//        std::cout << recv_buff_.size() << ": " << ms << std::endl;
+
+        std::ostream os(&tran_buff_);
+        os << "got msg.\n";
+
+        socket_.send(tran_buff_.data());
 
     } else {
         std::cout << ec.message() << std::endl;

@@ -16,7 +16,7 @@ namespace net {
 
     struct PacketHeader {
         UINT16 magic;
-        UINT16 len;
+        UINT32 len;
     };
 
     class Packet {
