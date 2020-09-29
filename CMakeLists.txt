@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(gserver)
 set(CMAKE_CXX_STANDARD 11)
-
+# boost
 include(${CMAKE_CURRENT_SOURCE_DIR}/external_boost.cmake)
 
 set(Boost_USE_STATIC_LIBS        ON) # only find static libs

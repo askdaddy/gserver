@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package labs_proto;
+
+//option cc_enable_arenas = true;
+
+message telegram {
+  int32 code = 1;
+  string msg = 2;
+}

@@ -8,6 +8,7 @@
 #include <boost/asio/basic_streambuf.hpp>
 #include "test_buffer.h"
 #include <stdio.h>
+#include "msg.pb.h"
 
 using namespace boost::asio;
 
@@ -46,51 +47,32 @@ void TestBuffer::acceptHandler(const error_code &e) {
 void TestBuffer::doRecv() {
     streambuf::mutable_buffers_type b_ = recv_buff_.prepare(256);
     socket_.async_read_some(buffer(b_),
-                            boost::bind(&TestBuffer::recvHandler, this,
+                            boost::bind(&TestBuffer::doRecv, this,
                                         placeholders::bytes_transferred, placeholders::error));
 }
 
-void TestBuffer::recvHandler(std::size_t tf_bytes, const error_code &ec) {
+void TestBuffer::doRecv(std::size_t tf_bytes, const error_code &ec) {
     if (!ec) {
         std::cout << "recv " << tf_bytes << std::endl;
         recv_buff_.commit(tf_bytes);
 
-//        auto bufs = recv_buff_.data();
+        // 929-2020
+        std::istream reader(&recv_buff_);
+        labs_proto::telegram tg;
+        tg.ParsePartialFromIstream(&reader);
 
-//        std::istream is(&recv_buff_);
-//        std::string s;
-//        is >> s;
-        char cs[6];
-        char* cs_pos = cs;
+        std::cout << tg.code() << " : " << tg.msg() << std::endl;
+//        google::protobuf::io::* raw_input;//(&reader);
 
-        recv_buff_.sgetn(cs, sizeof cs);
-        recv_buff_.consume(sizeof cs);
-
-        UINT16 mg;
-        UINT32 le;
-        mg = *(UINT16 *) cs_pos;
-
-        cs_pos += sizeof(UINT16);
-
-        le = *(UINT32 *) cs_pos;
+        // --end 929
 
 
-        std::cout << le << std::endl;
-
-
-
-        char ms[64];
-        recv_buff_.sgetn(ms,le);
-        recv_buff_.consume(le);
-
-
-
-//        std::cout << recv_buff_.size() << ": " << ms << std::endl;
-
-        std::ostream os(&tran_buff_);
-        os << "got msg.: " << ms << std::endl;
-
-        socket_.send(tran_buff_.data());
+        // send --
+//        std::ostream os(&tran_buff_);
+//        os << "got msg.: "<< tg.code() << std::endl;
+//        labs_proto::telegram* tel;
+//        tel->set_code(12);
+//        socket_.send(tran_buff_.data());
 
     } else {
         std::cout << ec.message() << std::endl;

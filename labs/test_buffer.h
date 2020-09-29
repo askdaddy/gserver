@@ -35,7 +35,7 @@ public:
 
     void doRecv();
 
-    void recvHandler(std::size_t tf_bytes, const error_code &ec);
+    void doRecv(std::size_t tf_bytes, const error_code &ec);
 
 private:
     shared_ptr<io_context> io_;
