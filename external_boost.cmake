@@ -1,6 +1,4 @@
-find_package(Boost)
-
-include( ExternalProject )
+# Get and build boost
 
 message( "External project - Boost" )
 
@@ -32,23 +30,10 @@ ExternalProject_Add(Boost
         --threading=single,multi
         --link=static
         --variant=releas
-        -j8
+        -j
         INSTALL_COMMAND ""
         INSTALL_DIR ${CMAKE_BINARY_DIR}/INSTALL
         )
-
-if(NOT ${Boost_FOUND})
-    #rerun cmake in initial build
-    #will update cmakecache/project files on first build
-    #so you may have to reload project after first build
-    add_custom_target(Rescan ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR} DEPENDS Boost)
-else()
-    #Rescan becomes a dummy target after first build
-    #this prevents cmake from rebuilding cache/projects on subsequent builds
-    add_custom_target(Rescan)
-endif()
-
-
 
 if( NOT WIN32 )
     set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/INSTALL/lib/boost/ )
