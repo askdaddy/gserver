@@ -1,9 +1,17 @@
 //#include <test_buffer.h>
+#include "reflection/factory.h"
+#include "reflection/classes.h"
 
 int main() {
 
-//    TestBuffer t("0.0.0.0",12400);
+    ClassFactory::getInstance().registClass("A",create_A);
 
+    auto *obj = (TestA*)ClassFactory::getInstance().getClassByName("A");
+    if(!obj){
+        return 1;
+    }
+
+    obj->print();
 
     return 0;
 }
