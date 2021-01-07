@@ -1,4 +1,6 @@
 #include<iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -16,6 +18,10 @@ public:
         return p.getId() != m_id;
     }
 
+    bool operator<(P p) const{
+        return m_id < p.getId();
+    }
+
     int getId() { return m_id; }
 
 private:
@@ -26,11 +32,16 @@ private:
 typedef void (P::*p_function)();
 
 int main() {
-    P p1(1), p2(1), p3(2);
+    P p1(1), p2(2), p3(3);
+    std::vector<P> v;
+    v.push_back(p2);
+    v.push_back(p1);
+    v.push_back(p3);
 
-    cout << (p1 == p2) << endl;
-    cout << (p1 != p3) << endl;
-    cout << (p1 == p3) << endl;
+    std::sort(v.begin(),v.end());
 
+    std::vector<P>::iterator last = v.end();
+    P p=v.back();
+//    p->getId();
     return 0;
 }
