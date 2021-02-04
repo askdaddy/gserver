@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.10)
 project(gserver)
 set(CMAKE_CXX_STANDARD 11)
-
+find_package (Threads REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/superbuild.cmake)
 
+set (Boost_USE_STATIC_LIBS ON)
+set (Boost_NO_SYSTEM_PATHS ON)
+find_package(Boost 1.67.0 REQUIRED COMPONENTS date_time system)
+message("boost libs ${Boost_LIBRARIES}")
+add_subdirectory(network)
 
-#add_subdirectory(protocol)
-#add_subdirectory(network)
-#add_subdirectory(labs)
+include_directories(network)
+include_directories(${Boost_INCLUDE_DIR})
 
-#include_directories(network)
-#include_directories(labs)
+add_executable(${PROJECT_NAME} main.cpp)
 
-add_executable(${PROJECT_NAME} main.cpp reflection/factory.h reflection/classes.h)
-
-target_link_libraries(${PROJECT_NAME} -lpthread)
+target_link_libraries(${PROJECT_NAME}  network  ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

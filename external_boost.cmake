@@ -15,8 +15,8 @@ endif()
 
 ExternalProject_Add(Boost
         GIT_REPOSITORY "https://github.com/boostorg/boost.git"
-        GIT_TAG boost-1.74.0
-        PREFIX boost-1_74
+        GIT_TAG boost-1.67.0
+        PREFIX boost-1_67
         BUILD_IN_SOURCE 1
         UPDATE_COMMAND ""
         PATCH_COMMAND ""
@@ -30,15 +30,15 @@ ExternalProject_Add(Boost
         --threading=single,multi
         --link=static
         --variant=releas
-        -j
         INSTALL_COMMAND ""
         INSTALL_DIR ${CMAKE_BINARY_DIR}/INSTALL
         )
 
 if( NOT WIN32 )
-    set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/INSTALL/lib/boost/ )
+    set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/INSTALL/lib/ )
     set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/INSTALL/include/ )
+
 else()
     set(Boost_LIBRARY_DIR ${CMAKE_BINARY_DIR}/INSTALL/lib/ )
-    set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/INSTALL/include/boost-1_74/ )
+    set(Boost_INCLUDE_DIR ${CMAKE_BINARY_DIR}/INSTALL/include/boost-1_67/ )
 endif()

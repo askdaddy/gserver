@@ -7,7 +7,7 @@ else()
     set(gen "${CMAKE_GENERATOR}" )
 endif()
 
-option( BUILD_BOOST_WITH_LOG "Build Boost 1.74 along with Boost.Log" ON )
+option( BUILD_BOOST_WITH_LOG "Build Boost along with Boost.Log" ON )
 if( ${BUILD_BOOST_WITH_LOG} )
     include( ${CMAKE_CURRENT_SOURCE_DIR}/external_boost.cmake )
 endif()
