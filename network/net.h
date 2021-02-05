@@ -6,13 +6,10 @@
 #define G_NET_H
 
 #include <string>
+#include "../platform.h"
 #include <boost/asio.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/bind/bind.hpp>
-#include "../platform.h"
-
-using namespace boost::asio;
-
 namespace net {
     static const UINT32 MAX_CONNS = 1024;
 

@@ -6,8 +6,8 @@
 #define G_SERVER_NET_H
 
 #include "net.h"
-
 #include "connection.h"
+
 
 namespace net {
 

@@ -20,8 +20,7 @@ namespace net {
     };
 
     class Packet {
-
-
+        // TODO
     };
 
     class PacketHandler : public boost::enable_shared_from_this<PacketHandler> {

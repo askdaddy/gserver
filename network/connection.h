@@ -13,6 +13,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/noncopyable.hpp>
 
+
 #define RECV_BUF_SIZE               512
 using namespace boost::asio;
 
