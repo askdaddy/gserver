@@ -13,18 +13,11 @@ ExternalProject_Add(protobuf-external
         SOURCE_DIR "${CMAKE_BINARY_DIR}/protobuf-src"
         BINARY_DIR "${CMAKE_BINARY_DIR}/protobuf-build"
         UPDATE_COMMAND ""
-#        PATCH_COMMAND git apply "${CMAKE_SOURCE_DIR}/patches/protobuf.patch"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
         TEST_COMMAND ""
         LOG_DOWNLOAD ON
-#        CMAKE_CACHE_ARGS
-#        "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
-#        "-Dprotobuf_BUILD_TESTS:BOOL=OFF"
-#        "-Dprotobuf_BUILD_EXAMPLES:BOOL=OFF"
-#        "-Dprotobuf_WITH_ZLIB:BOOL=OFF"
-#        "-DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}"
 )
 
 

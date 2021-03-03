@@ -1,5 +1,5 @@
 # Get and build boost
-
+include( ExternalProject )
 message( "External project - Boost" )
 
 set( Boost_Bootstrap_Command )

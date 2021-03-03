@@ -1,4 +1,5 @@
 project(proto)
+message("proj ${PROJECT_NAME} ")
 
 find_package(Protobuf REQUIRED)
 include_directories(${Protobuf_INCLUDE_DIRS})
