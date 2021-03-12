@@ -77,18 +77,6 @@ void TestBuffer::doRecv(std::size_t tf_bytes, const error_code &ec) {
             ob.consume(n);
         }
 
-
-        // google::protobuf::io::* raw_input;//(&reader);
-        // --end 929
-
-
-        // send --
-        //        std::ostream os(&tran_buff_);
-        //        os << "got msg.: "<< tg.code() << std::endl;
-        //        labs_proto::telegram* tel;
-        //        tel->set_code(12);
-        //        socket_.send(tran_buff_.data());
-
     } else {
         std::cout << ec.message() << std::endl;
         return;
