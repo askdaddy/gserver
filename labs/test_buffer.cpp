@@ -45,7 +45,7 @@ void TestBuffer::acceptHandler(const error_code &e) {
 }
 
 void TestBuffer::doRecv() {
-    streambuf::mutable_buffers_type b_ = recv_buff_.prepare(256);
+    streambuf::mutable_buffers_type b_ = recv_buff_.prepare(1048576);
     socket_.async_read_some(buffer(b_),
                             boost::bind(&TestBuffer::doRecv, this,
                                         placeholders::bytes_transferred, placeholders::error));
@@ -53,26 +53,28 @@ void TestBuffer::doRecv() {
 
 void TestBuffer::doRecv(std::size_t tf_bytes, const error_code &ec) {
     if (!ec) {
-        std::cout << "recv " << tf_bytes << std::endl;
+        using namespace std;
+
         recv_buff_.commit(tf_bytes);
+        cout << "recv " << tf_bytes << "+" << recv_buff_.size() << endl;
 
         // 929-2020
-        std::istream reader(&recv_buff_);
+        istream reader(&recv_buff_);
         labs_proto::telegram tg;
-        tg.ParsePartialFromIstream(&reader);
+        bool isParsed = tg.ParseFromIstream(&reader);//tg.ParsePartialFromIstream(&reader);
+        if (isParsed)
+            cout << tg.code() << " : " << tg.msg() << endl;
 
-        std::cout << tg.code() << " : " << tg.msg() << std::endl;
-//        google::protobuf::io::* raw_input;//(&reader);
-
+        // google::protobuf::io::* raw_input;//(&reader);
         // --end 929
 
 
         // send --
-//        std::ostream os(&tran_buff_);
-//        os << "got msg.: "<< tg.code() << std::endl;
-//        labs_proto::telegram* tel;
-//        tel->set_code(12);
-//        socket_.send(tran_buff_.data());
+        //        std::ostream os(&tran_buff_);
+        //        os << "got msg.: "<< tg.code() << std::endl;
+        //        labs_proto::telegram* tel;
+        //        tel->set_code(12);
+        //        socket_.send(tran_buff_.data());
 
     } else {
         std::cout << ec.message() << std::endl;

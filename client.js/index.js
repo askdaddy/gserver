@@ -2,7 +2,7 @@ var net = require('net');
 var protobuf = require("protobufjs");
 
 var HOST = '127.0.0.1';
-var PORT = 12400;
+var PORT = 12345;
 
 var client = new net.Socket();
 client.connect(PORT, HOST, function () {
@@ -30,7 +30,7 @@ function run() {
         // var errMsg = telegram.verify(payload);
         // if (errMsg) throw Error(errMsg);
 
-        for (var i=0; i < 300; ++i) {
+        for (var i=0; i < 9000000; ++i) {
             payload.code = i;
             console.log(payload);
             var message = telegram.create(payload);

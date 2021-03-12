@@ -10,7 +10,6 @@ include_directories(${Boost_INCLUDE_DIRS})
 add_subdirectory(protocol)
 add_subdirectory(network)
 add_subdirectory(labs)
-
 add_subdirectory(multiple)
 
 include_directories(network)
