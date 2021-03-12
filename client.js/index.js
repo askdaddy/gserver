@@ -13,6 +13,15 @@ client.connect(PORT, HOST, function () {
 
 client.on('data', function (data) {
     console.log('Data: ' + data);
+    // var telegram = protobuf.lookupType("labs_proto.telegram");
+    protobuf.load("msg.proto", function (err, root) {
+    if (err) throw err;
+    var telegram = root.lookupType("labs_proto.telegram");
+
+    var msg = telegram.decode(data);
+    console.log(msg);
+    run();
+    })
     // client.destroy();
 });
 
@@ -30,13 +39,13 @@ function run() {
         // var errMsg = telegram.verify(payload);
         // if (errMsg) throw Error(errMsg);
 
-        for (var i=0; i < 9000000; ++i) {
-            payload.code = i;
+        // for (var i=0; i < 2; ++i) {
+            payload.code = 3;
             console.log(payload);
             var message = telegram.create(payload);
             var b = telegram.encode(message).finish();
             client.write(b);
-        }
+        // }
         // client.destroy();
     });
 }

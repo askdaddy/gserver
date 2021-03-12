@@ -62,8 +62,21 @@ void TestBuffer::doRecv(std::size_t tf_bytes, const error_code &ec) {
         istream reader(&recv_buff_);
         labs_proto::telegram tg;
         bool isParsed = tg.ParseFromIstream(&reader);//tg.ParsePartialFromIstream(&reader);
-        if (isParsed)
-            cout << tg.code() << " : " << tg.msg() << endl;
+        if (isParsed){
+            std::cout << tg.code() << " : " << tg.msg() << std::endl;
+
+            // send
+            labs_proto::telegram info;
+            info.set_code(7);
+            info.set_msg("what a wonderful world!");
+
+            boost::asio::streambuf ob;
+            std::ostream os(&ob);
+            info.SerializeToOstream(&os);
+            std::size_t n = socket_.send(ob.data());
+            ob.consume(n);
+        }
+
 
         // google::protobuf::io::* raw_input;//(&reader);
         // --end 929
