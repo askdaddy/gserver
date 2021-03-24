@@ -17,8 +17,9 @@ get_directory_property(PROTO_INCLUDE
         DEFINITION PROTO_INCLUDE)
 include_directories(${PROTO_INCLUDE})
 
+add_executable(labs_serv server.cpp )
+target_link_libraries(labs_serv ${Boost_LIBRARIES} proto ${Protobuf_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-file(GLOB SRC_LIST ./*.cpp)
-#add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
-add_executable(labs ${SRC_LIST})
-target_link_libraries(labs ${Boost_LIBRARIES} proto ${Protobuf_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(labs_client client.cpp)
+target_link_libraries(labs_client ${Boost_LIBRARIES} proto ${Protobuf_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
