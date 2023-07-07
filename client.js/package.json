@@ -7,6 +7,6 @@
     "start": "node ./index"
   },
   "dependencies": {
-    "protobufjs": "^6.10.1"
+    "protobufjs": "^7.2.4"
   }
 }
